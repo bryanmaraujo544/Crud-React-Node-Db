@@ -17,6 +17,14 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors())
 app.use(express.json())
 
+app.get('/api/get', (req, res) => {
+    const sqlSelect = 'SELECT * FROM movie_reviews;'
+
+    db.query(sqlSelect, (err, result) => {
+        res.send(result)
+    })
+})
+
 app.post('/api/insert', (req, res) => {
     const sqlInsert = 'INSERT INTO movie_reviews (movie_name, movie_review) VALUES (?,?);'
     // I use question marks to say I don't want to insert constant values, I want to set dynamic values in query time
