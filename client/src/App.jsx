@@ -53,13 +53,11 @@ function App() {
     
   }
 
-  const handleDeleteReview = async (movieName) => {
+  const handleDeleteReview = (movieName) => {
     Axios.delete(`http://localhost:3001/api/delete/${movieName}`)
-    
-    await window.location.reload()
-    
-    // setTimeout(() => {
-    // }, 50)
+    setTimeout(() => {
+      window.location.reload()
+    }, 100)
   }
 
   useEffect(() => {
@@ -91,7 +89,7 @@ function App() {
     setIsModalOn(false)
     setTimeout(() => {
       window.location.reload()
-    }, 10)
+    }, 100)
 
   }
   return (
