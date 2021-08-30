@@ -28,19 +28,22 @@ function App() {
   // inpust referencies to controls the values of them
   const movieNameRef = useRef(null)
   const movieReviewRef = useRef(null)
-  
+
+  // Function to submit our review to database
   const submitReview = () => {
     if (movieName !== '' && movieReview !== ''){
+      // Here I check if the movie name have alredy been used
       const alreadyUsed = reviewList.some((movie) => movie.movie_name === movieName)
       
       if (alreadyUsed){
         window.alert('This movie have already been reviewed. Thanks!')
       } else {
+        // Here I am making a post request, and sending two variables to our backend
         Axios.post('http://localhost:3001/api/insert', {
           movieName: movieName,
           movieReview: movieReview
         })
-        // Here I am making a post request, and sending two variables to our backend
+        // Setting manually the state for I do not need reload the page
         setReviewList([...reviewList, {movie_name: movieName, movie_review: movieReview}])
 
         // Cleaning inputs of the form
@@ -53,6 +56,7 @@ function App() {
     
   }
 
+  // Function to delete review
   const handleDeleteReview = (movieName) => {
     Axios.delete(`http://localhost:3001/api/delete/${movieName}`)
     setTimeout(() => {
@@ -60,29 +64,21 @@ function App() {
     }, 100)
   }
 
-  useEffect(() => {
-    console.log(newReviewRef.current)
-  })
-
 
   // Function to get the informations of the card clicked and show an modal
   const handleReviewModal = (movieName, movieReview) => {
     // Making the modal appear
     setIsModalOn(true)
     
+    // Setting theinformations for modal use
     setModalInfos({
       movieName: movieName,
       movieReview: movieReview,
     })
-    console.log(modalInfos)
-  
-    
-    // Axios.put('http://localhost:3001/api/update', {movieName: movieName, movieReview: movieReview})
   }
-  
-
 
   const [newReview, setNewReview] = useState('')
+
   // Function to send the review updated to backend
   const handleUpdateReview = (movieName) => {
     Axios.put('http://localhost:3001/api/update', {movieName: movieName, movieReview: newReview})
@@ -92,15 +88,16 @@ function App() {
     }, 100)
 
   }
+
   return (
     <>
-    <div className="App">
+    <div className="main">
       <h1> Crud Application </h1>
       <div className="form">
         <label htmlFor="movie-name">Movie name:</label>
-        <input ref={movieNameRef} placeholder="Type movie name..." type="text" id="movie-name" onChange={(e) => setMovieName(e.target.value)}/>
+        <input ref={movieNameRef} placeholder="Type movie name..." type="text" id="movie-name" onChange={(e) => setMovieName(e.target.value)} autoFocus/>
         <label htmlFor="review">Review</label>
-        <input ref={movieReviewRef} placeholder="Type movie review..." type="text" id="review" onChange={(e) => setMovieReview(e.target.value)} autoFocus/>
+        <input ref={movieReviewRef} placeholder="Type movie review..." type="text" id="review" onChange={(e) => setMovieReview(e.target.value)} />
         <button onClick={() => submitReview()}>Submit</button>
       </div>
         <div className="reviews">
