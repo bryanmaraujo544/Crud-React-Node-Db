@@ -39,6 +39,12 @@ app.post('/api/insert', (req, res) => {
     })
 })
 
+app.delete('/api/delete/:movieName', (req, res) => {
+    const name = req.params.movieName
+    const sqlDelete = 'DELETE FROM movie_reviews WHERE movie_name = ?'
+    db.query(sqlDelete, name)
+})
+
 app.listen(3001, () => {
     console.log("Hello World")
     console.log(db)
