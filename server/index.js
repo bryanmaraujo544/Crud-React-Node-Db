@@ -34,9 +34,7 @@ app.post('/api/insert', (req, res) => {
     const movieReview = req.body.movieReview
 
     // Here I am setting to the columns the value of the variables
-    db.query(sqlInsert, [movieName, movieReview], (err, result) => {
-        console.log(result)
-    })
+    db.query(sqlInsert, [movieName, movieReview])
 })
 
 app.delete('/api/delete/:movieName', (req, res) => {
@@ -45,7 +43,17 @@ app.delete('/api/delete/:movieName', (req, res) => {
     db.query(sqlDelete, name)
 })
 
+app.put('/api/update', (req, res) => {
+    const name = req.body.movieName
+    const review = req.body.movieReview
+    console.log(name, review)
+    const sqlUpdate = 'UPDATE movie_reviews SET movie_review = ? WHERE movie_name = ?'
+    db.query(sqlUpdate, [review, name], (err, result) => {
+        if (err) console.log(err)
+    })
+})
+
 app.listen(3001, () => {
     console.log("Hello World")
-    console.log(db)
+
 })
