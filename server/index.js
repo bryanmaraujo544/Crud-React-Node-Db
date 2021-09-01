@@ -53,6 +53,25 @@ app.put('/api/update', (req, res) => {
     })
 })
 
+// Endpoint to register the new users
+app.post('/api/insert/users', (req, res) => {
+    const { username, email, password, imageUrl } = req.body
+
+    const sqlInsert = 'INSERT INTO users (users_username, users_email, users_password, users_imageurl) VALUES (?,?,?,?);'
+    db.query(sqlInsert, [username, email, password, imageUrl], (err, result) => {
+        if (err) console.log(err)
+    })
+})
+
+app.get('/api/get/users', (req, res) => {
+    const sqlSelect = 'SELECT * FROM users;'
+   
+
+    db.query(sqlSelect, (err, result) => {
+        res.send(result)
+    })
+})
+
 app.listen(3001, () => {
     console.log("Hello World")
 

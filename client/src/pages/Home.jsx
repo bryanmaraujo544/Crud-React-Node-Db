@@ -1,14 +1,22 @@
 import { useEffect, useState, useRef } from 'react'
 import Axios from 'axios'
 import '../styles/Home.scss'
+import { useAuth } from '../hooks/useAuth'
 
 export const Home = () => {
+    const [user, setUser] = useState({})
     useEffect(() => {
         Axios.get('http://localhost:3001/api/get')
         .then((response) => {
             setReviewList(response.data)
         })
 
+    }, [])
+
+    // Getting the infos of the user wich was storaged in the login part
+    const userLocal = JSON.parse(window.localStorage.getItem('user'))
+    useEffect(() => {
+      setUser(userLocal)
     }, [])
 
     // Ref of the input
@@ -22,8 +30,6 @@ export const Home = () => {
     // Creating the modal informations
     const [modalInfos, setModalInfos] = useState({movieName: '', movieReview: ''})
     const [isModalOn, setIsModalOn] = useState(false)
-
-    
     
     // inpust referencies to controls the values of them
     const movieNameRef = useRef(null)
@@ -53,7 +59,6 @@ export const Home = () => {
         } else {
             window.alert('Empty values. Write something!')
         }
-    
     }
 
     // Function to delete review
@@ -63,7 +68,6 @@ export const Home = () => {
             window.location.reload()
         }, 100)
     }
-
 
     // Function to get the informations of the card clicked and show an modal
     const handleReviewModal = (movieName, movieReview) => {
