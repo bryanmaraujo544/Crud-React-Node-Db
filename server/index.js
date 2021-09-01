@@ -17,38 +17,47 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors())
 app.use(express.json())
 
-app.get('/api/get', (req, res) => {
-    const sqlSelect = 'SELECT * FROM movie_reviews;'
+// Endpoint to get the reviews based on the email
+app.get('/api/get/:userEmail', (req, res) => {
+    const userEmail = req.params.userEmail
+    console.log('oi',req.params)
+    const sqlSelect = 'SELECT * FROM movie_reviews WHERE user_email = ?;'
 
-    db.query(sqlSelect, (err, result) => {
+    db.query(sqlSelect, userEmail, (err, result) => {
+        // console.log(err)
         res.send(result)
     })
 })
 
 app.post('/api/insert', (req, res) => {
-    const sqlInsert = 'INSERT INTO movie_reviews (movie_name, movie_review) VALUES (?,?);'
+    const sqlInsert = 'INSERT INTO movie_reviews (movie_name, movie_review, user_email) VALUES (?,?,?);'
     // I use question marks to say I don't want to insert constant values, I want to set dynamic values in query time
 
     // We are assigned the properties of the object we passed on our axios post in frontend
-    const movieName = req.body.movieName
-    const movieReview = req.body.movieReview
+    const { movieName, movieReview, userEmail } =  req.body
+    console.log('userEmail', userEmail)
 
     // Here I am setting to the columns the value of the variables
-    db.query(sqlInsert, [movieName, movieReview])
+    db.query(sqlInsert, [movieName, movieReview, userEmail], (err, result) => {
+        console.log(userEmail)
+    })
 })
 
-app.delete('/api/delete/:movieName', (req, res) => {
+app.delete('/api/delete/:movieName/:userEmail', (req, res) => {
     const name = req.params.movieName
-    const sqlDelete = 'DELETE FROM movie_reviews WHERE movie_name = ?'
-    db.query(sqlDelete, name)
+    const userEmail = req.params.userEmail
+    console.log('parama', req.params)
+    const sqlDelete = 'DELETE FROM movie_reviews WHERE movie_name = ? AND user_email = ? '
+    db.query(sqlDelete, [name, userEmail])
 })
 
 app.put('/api/update', (req, res) => {
     const name = req.body.movieName
     const review = req.body.movieReview
+    const userEmail = req.body.userEmail
     console.log(name, review)
-    const sqlUpdate = 'UPDATE movie_reviews SET movie_review = ? WHERE movie_name = ?'
-    db.query(sqlUpdate, [review, name], (err, result) => {
+    const sqlUpdate = 'UPDATE movie_reviews SET movie_review = ? WHERE movie_name = ? AND user_email = ?'
+    db.query(sqlUpdate, [review, name, userEmail], (err, result) => {
         if (err) console.log(err)
     })
 })
@@ -63,16 +72,15 @@ app.post('/api/insert/users', (req, res) => {
     })
 })
 
-app.get('/api/get/users', (req, res) => {
-    const sqlSelect = 'SELECT * FROM users;'
-   
-
+app.get('/api/getUsers', (req, res) => {
+    const sqlSelect = 'SELECT * FROM db_crud.users;'
+    console.log('oiiiiiii')
     db.query(sqlSelect, (err, result) => {
         res.send(result)
+        console.log('erro' + err, 'result' + result)
     })
 })
 
 app.listen(3001, () => {
     console.log("Hello World")
-
 })

@@ -8,19 +8,27 @@ export const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [users, setUsers] = useState([])
+    console.log(users)
+
    
     useEffect(() => {
-        Axios.get('http://localhost:3001/api/get/users')
-            .then(response => {
-                setUsers(response.data)
-            })
+        try {
+            Axios.get('http://localhost:3001/api/getUsers')
+                .then(response => {
+                    console.log(response)
+                    setUsers(response.data)
+                })
+        } catch (error) {
+            console.log(error)
+        }
 
         }, [])
 
     const handleSignIn = (e) => {
         e.preventDefault()
+        console.log('allusers', users)
         const [ loginUser ] = users.filter(user => user.users_email === email && user.users_password === password)
-        console.log(loginUser)
+        console.log('login-user', loginUser)
 
         if (loginUser !== undefined){
             window.localStorage.setItem('user', JSON.stringify(loginUser))
@@ -30,7 +38,7 @@ export const Login = () => {
             window.alert('wrong values')
         }
     }
-    
+
     return (
         <main>
             <div className="box">
