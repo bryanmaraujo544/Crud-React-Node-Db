@@ -1,5 +1,7 @@
 # Live Application
 
+![MovieReviewGif](https://user-images.githubusercontent.com/62571814/131766751-4e3858cc-85bd-42ec-bc57-5851f9b2a68f.gif)
+
 
 
 ## 💻How it is works
