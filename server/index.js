@@ -55,10 +55,11 @@ app.put('/api/update', (req, res) => {
     const name = req.body.movieName
     const review = req.body.movieReview
     const userEmail = req.body.userEmail
-    console.log(name, review)
+    console.log(name, review, userEmail)
     const sqlUpdate = 'UPDATE movie_reviews SET movie_review = ? WHERE movie_name = ? AND user_email = ?'
     db.query(sqlUpdate, [review, name, userEmail], (err, result) => {
-        if (err) console.log(err)
+        if (err) console.log('err',err)
+        if (result) console.log('res', result)
     })
 })
 

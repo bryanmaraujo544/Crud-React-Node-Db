@@ -4,6 +4,7 @@ import { NavBar } from '../components/NavBar'
 import '../styles/Home.scss'
 import { useAuth } from '../hooks/useAuth'
 import { useHistory } from 'react-router'
+import { Modal } from '../components/Modal'
 
 export const Home = () => {
     const history = useHistory()
@@ -23,8 +24,6 @@ export const Home = () => {
     }, [])
 
 
-    // Ref of the input
-    const newReviewRef = useRef('')
 
     const [movieName, setMovieName] = useState('')
     const [movieReview, setMovieReview] = useState('')
@@ -85,25 +84,22 @@ export const Home = () => {
             movieReview: movieReview,
         })
     }
+    // const [newReview, setNewReview] = useState('')
 
-    const [newReview, setNewReview] = useState('')
+    // // Function to send the review updated to backend
+    // const handleUpdateReview = (movieName) => {
+    //     Axios.put('http://localhost:3001/api/update', {movieName: movieName, movieReview: newReview, userEmail: userLocal?.users_email})
+    //     setIsModalOn(false)
+    //     setTimeout(() => {
+    //         window.location.reload()
+    //     }, 100)
+    // }
 
-    // Function to send the review updated to backend
-    const handleUpdateReview = (movieName) => {
-        Axios.put('http://localhost:3001/api/update', {movieName: movieName, movieReview: newReview, userEmail: userLocal?.users_email})
-        setIsModalOn(false)
-        setTimeout(() => {
-            window.location.reload()
-        }, 100)
-
-    }
-
-    const handleCloseModal = () => {
-
-      if (isModalOn){
-        setIsModalOn(false)
-      }
-    }
+    // const handleCloseModal = () => {
+    //   if (isModalOn){
+    //     setIsModalOn(false)
+    //   }
+    // }
 
     return (
         <>
@@ -144,21 +140,11 @@ export const Home = () => {
               ))}
             </div>
         </div>
-        {isModalOn && 
-          <div className="modal"  onClick={() => handleCloseModal()}>
-            <div className="card">
-              <div className="text">
-                <h3 className="card-title">
-                  {modalInfos.movieName}
-                </h3>
-                <input ref={newReviewRef}  placeholder="Type the new review for the movie..." type="text" className="review-input" onChange={(e) => setNewReview(e.target.value)} autoFocus/>
-              </div>
-                <div className="buttons">
-                  <button type="button" onClick={() => handleUpdateReview(modalInfos.movieName)}> Update </button>
-                </div>
-            </div>
-          </div>
-        }
+        <Modal 
+          isModalOn={isModalOn} 
+          modalInfos={modalInfos}
+          setIsModalOn={setIsModalOn}
+        />
         </>
     )
 }
