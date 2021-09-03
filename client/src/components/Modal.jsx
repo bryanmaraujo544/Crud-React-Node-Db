@@ -10,8 +10,7 @@ export const Modal = ({
     const userLocal = JSON.parse(window.localStorage.getItem('user'))
 
     const [newReview, setNewReview] = useState('')
-    console.log(modalInfos.movieName, newReview)
-    console.log(userLocal)
+
     // Function to send the review updated to backend
     const handleUpdateReview = useCallback((movieName) => {
         Axios.put('http://localhost:3001/api/update', {movieName: modalInfos.movieName, movieReview: newReview, userEmail: userLocal?.users_email})
