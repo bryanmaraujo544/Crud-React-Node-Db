@@ -16,10 +16,15 @@ header {
         margin-bottom: 16px;
     }
 
+    .backIcon {
+        width: 42px;
+        filter: invert(1);
+    }
 
     .profile {
         display: flex;
         align-items: center;
+        cursor: pointer;
         img {
             border-radius: 50%;
             height: 40px;

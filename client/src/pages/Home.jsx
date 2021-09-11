@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react'
 import Axios from 'axios'
 import { NavBar } from '../components/NavBar'
 import '../styles/Home.scss'
-import { useAuth } from '../hooks/useAuth'
 import { useHistory } from 'react-router'
 import { Modal } from '../components/Modal'
 import { Card } from '../components/Card'
@@ -11,9 +10,11 @@ export const Home = () => {
     const history = useHistory()
     // Getting the infos of the user wich was storaged in the login part
     const userLocal = JSON.parse(window.localStorage.getItem('user'))
-    if (userLocal === null){
-      history.push('/')
-    }
+    useEffect(() => {
+      if (userLocal === null){
+        history.push('/')
+      }
+    }, [userLocal])
     
     useEffect(() => {
       // Getting the information of the database based on the email of the user
@@ -22,12 +23,11 @@ export const Home = () => {
             setReviewList(response.data)
         })
 
-    }, [])
+    }, [userLocal?.users_email])
 
     const [movieName, setMovieName] = useState('')
     const [movieReview, setMovieReview] = useState('')
     const [reviewList, setReviewList] = useState([])
-
 
     // Creating the modal informations
     const [modalInfos, setModalInfos] = useState({movieName: '', movieReview: ''})
