@@ -4,11 +4,16 @@ import { useHistory } from "react-router"
 
 
 export const Login = () => {
+    const userLocal = JSON.parse(window.localStorage.getItem('user'))
+
     const history = useHistory()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [users, setUsers] = useState([])
-    console.log(users)
+    
+    if (userLocal !== null){
+        history.push('/home')
+    }
 
    
     useEffect(() => {
