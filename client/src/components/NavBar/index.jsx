@@ -10,7 +10,7 @@ export const NavBar = ({isProfile}) => {
  
     const handleLogout = () => {
         window.localStorage.removeItem('user')
-        window.location.reload()
+        history.push('/')
     }
     return (
         <header>

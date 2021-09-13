@@ -10,22 +10,14 @@ export const Profile = () => {
     const userLocal = JSON.parse(window.localStorage.getItem('user'))
     console.log(userLocal)
 
-    // if (userLocal === null){
-    //     history.push('/')
-    // }
-
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [image, setImage] = useState(userLocal?.users_imageurl)
     const pastEmail = userLocal?.users_email
 
-    console.log('image', image)
-
     const { users } = useUsers()
-    console.log('users', users)
 
-    
     useEffect(() => {
         const newEmail = JSON.parse(window.localStorage?.getItem('userTemp')).users_email
         const [user] = users.filter(user => user.users_email === newEmail)
