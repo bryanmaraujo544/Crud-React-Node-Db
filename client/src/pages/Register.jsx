@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useEmailVerification } from '../hooks/useEmailVerification'
 import Axios from 'axios'
 import { useHistory } from 'react-router'
 import '../styles/Register.scss'
@@ -17,14 +18,16 @@ export const Register = () => {
                 setUsers(response.data)
             })
     }, [])
+ 
 
+    const { isEmailUsed } = useEmailVerification(email)
 
     const handleSignUp = (e) => {
         e.preventDefault()
         if (username !== '' && email !== '' && password !== ''){
             if (email.includes('@')){
                 // Verification to check if the email the user wrote is being used for some other
-                const isEmailUsed = users.some(user => user.users_email === email)
+                console.log('isEmailUsed', isEmailUsed)
                 if (isEmailUsed){ 
                     window.alert('This email is already been used')
                 } else {
@@ -36,7 +39,11 @@ export const Register = () => {
                     })
                     history.push('/')
                     window.location.reload()
+  
                 }
+                
+              
+            
             } else {
                 window.alert('Enter a valid email')
             }
