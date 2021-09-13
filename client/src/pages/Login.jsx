@@ -1,39 +1,27 @@
 import { useEffect, useState } from "react"
 import Axios from 'axios'
 import { useHistory } from "react-router"
+import { useUsers } from "../hooks/useUsers"
 
 
 export const Login = () => {
-    const userLocal = JSON.parse(window.localStorage.getItem('user'))
+    // const userLocal = JSON.parse(window.localStorage.getItem('user'))
 
     const history = useHistory()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [users, setUsers] = useState([])
     
-    if (userLocal !== null){
-        history.push('/home')
-    }
+    // if (userLocal !== null){
+    //     history.push('/home')
+    // }
 
-   
-    useEffect(() => {
-        try {
-            Axios.get('http://localhost:3001/api/getUsers')
-                .then(response => {
-                    console.log(response)
-                    setUsers(response.data)
-                })
-        } catch (error) {
-            console.log(error)
-        }
-
-        }, [])
-
+    const { loginUser } = useUsers(email, password)
+    console.log('loginUser', loginUser)
+    
     const handleSignIn = (e) => {
         e.preventDefault()
-        console.log('allusers', users)
-        const [ loginUser ] = users.filter(user => user.users_email === email && user.users_password === password)
-        console.log('login-user', loginUser)
+     
 
         if (loginUser !== undefined){
             window.localStorage.setItem('user', JSON.stringify(loginUser))

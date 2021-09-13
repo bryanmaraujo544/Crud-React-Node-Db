@@ -73,6 +73,7 @@ app.post('/api/insert/users', (req, res) => {
     })
 })
 
+// Endpoint to get all the users of db
 app.get('/api/getUsers', (req, res) => {
     const sqlSelect = 'SELECT * FROM db_crud.users;'
     console.log('oiiiiiii')
@@ -80,6 +81,22 @@ app.get('/api/getUsers', (req, res) => {
         res.send(result)
         console.log('erro' + err, 'result' + result)
     })
+})
+
+// Endpoint for update user information
+app.put('/api/updateUsers', (req, res) => {
+    const { username, email, password, image, pastEmail } = req.body
+    const sqlUpdate = "UPDATE users SET users_username = ?, users_email = ?, users_password = ?, users_imageUrl = ? WHERE users_email = ?"
+    db.query(sqlUpdate, [username, email, password, image, pastEmail], (err, res) => {
+        if (err) console.log(err)
+    })
+})
+
+// Endpoint for update email of the review table in db
+app.put('/api/updateEmailReview', (req, res) => {
+    const { pastEmail, email } = req.body
+    const sqlUpdate = "UPDATE movie_reviews SET user_email = ? WHERE user_email = ?"
+    db.query(sqlUpdate, [email, pastEmail])
 })
 
 app.listen(3001, () => {
