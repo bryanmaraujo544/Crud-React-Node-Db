@@ -5,6 +5,8 @@ import { NavBar } from '../components/NavBar'
 import Axios from 'axios'
 import '../styles/Profile.scss'
 import { useEmailVerification } from '../hooks/useEmailVerification'
+import { toast } from 'react-toastify'
+
 
 export const Profile = () => {
     const history = useHistory()
@@ -45,7 +47,7 @@ export const Profile = () => {
     const handleUpdateInfos = useCallback((e) => {
         e.preventDefault()
         if (isEmailUsed){
-            window.alert('This email is already been used')
+            toast.error('Oops! This email is already been used :(')
         } else {
             Axios.put('http://localhost:3001/api/updateUsers', { username, email, password, image, pastEmail })
             

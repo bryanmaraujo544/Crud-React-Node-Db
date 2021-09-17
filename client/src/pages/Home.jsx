@@ -5,6 +5,7 @@ import '../styles/Home.scss'
 import { useHistory } from 'react-router'
 import { Modal } from '../components/Modal'
 import { Card } from '../components/Card'
+import { toast } from 'react-toastify'
 
 export const Home = () => {
     const history = useHistory()
@@ -44,23 +45,27 @@ export const Home = () => {
             const alreadyUsed = reviewList.some((movie) => movie.movie_name === movieName)
             
             if (alreadyUsed){
-            window.alert('This movie have already been reviewed. Thanks!')
+              toast.error('This movie have already been reviewed. Thanks!')
             } else {
-            // Here I am making a post request, and sending two variables to our backend
-            Axios.post('http://localhost:3001/api/insert', {
-                movieName: movieName,
-                movieReview: movieReview,
-                userEmail: userLocal.users_email
-            })
-            // Setting manually the state for I do not need reload the page
-            setReviewList([...reviewList, {movie_name: movieName, movie_review: movieReview}])
+              // Here I am making a post request, and sending two variables to our backend
+              Axios.post('http://localhost:3001/api/insert', {
+                  movieName: movieName,
+                  movieReview: movieReview,
+                  userEmail: userLocal.users_email
+              })
+              // Setting manually the state for I do not need reload the page
+              setReviewList([...reviewList, {movie_name: movieName, movie_review: movieReview}])
 
-            // Cleaning inputs of the form
-            movieNameRef.current.value = ''
-            movieReviewRef.current.value = ''
+              // Cleaning inputs of the form
+              movieNameRef.current.value = ''
+              movieReviewRef.current.value = ''
+              toast.success('Review done!', {
+                position: 'top-center'
+              })
             }
         } else {
-            window.alert('Empty values. Write something!')
+            toast.error('Empty values. Write something!')
+
         }
     }
 
