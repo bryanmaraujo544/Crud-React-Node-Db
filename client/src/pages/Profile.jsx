@@ -28,8 +28,8 @@ export const Profile = () => {
         // I'm doing it because I need to set only one time and the user, in the first time the page render, will be undefined, because users array is been 
         // Uploaded by backend. And if for that this useEffect runs every time users array change.
         if (user !== undefined && userLocal === null){
-                window.localStorage.setItem('user', JSON.stringify(user))
-                window.location.reload()
+            window.localStorage.setItem('user', JSON.stringify(user))
+            window.location.reload()
         }
     }, [users])
 
