@@ -6,6 +6,8 @@ import Axios from 'axios'
 import '../styles/Profile.scss'
 import { useEmailVerification } from '../hooks/useEmailVerification'
 import { toast } from 'react-toastify'
+import { FiAlertCircle } from "react-icons/fi";
+
 
 
 export const Profile = () => {
@@ -49,7 +51,6 @@ export const Profile = () => {
     const strToday = dateToday.toISOString()
 
     const alterationDate = new Date(userLocal?.alterationDate)
-    console.log('day', alterationDate)
     const strDate1 = alterationDate.toISOString()
 
     const msInDay = 1000 * 60 * 60  * 24
@@ -107,6 +108,7 @@ export const Profile = () => {
                     {
                         showError &&
                         <div className="timer-div">
+                            <FiAlertCircle />
                             <p>You altered the information { daysDifference } ago. come back { daysLeft } days later. </p>
                         </div>
                     }

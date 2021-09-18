@@ -3,7 +3,7 @@ import Axios from 'axios'
 import { NavBar } from '../components/NavBar'
 import '../styles/Home.scss'
 import { useHistory } from 'react-router'
-import { Modal } from '../components/Modal'
+import { Modal } from '../components/Modal/Modal'
 import { Card } from '../components/Card'
 import { toast } from 'react-toastify'
 

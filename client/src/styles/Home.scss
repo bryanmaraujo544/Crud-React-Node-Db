@@ -196,67 +196,7 @@ body {
     }
   }
   
-  .modal {
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background:rgba($color: #000000, $alpha: .5);
-    position: fixed;
-    top: 0;
-    left: 0;
-  
-    .card {
-      background: white;
-      width: 90%;
-      max-width: 700px;
-      display: flex;
-      align-items: flex-end;
-      padding: 32px;
-      border-radius: 16px;
-  
-      .text {
-        flex-grow: 1;
-  
-        .card-title {
-          font-size: 32px;
-          margin: 0;
-          margin-bottom: 16px;
-        }
-  
-        .review-input {
-          padding: 16px;
-          width: 400px;
-          border: none;
-          margin-top: 12px;
-          margin-bottom: 24px;
-          font-size: 18px;
-          border-radius: 8px;
-          color: gray;
-          background: #E9ECEF;
-          margin: 0;
-        }
-      }
-  
-      .buttons {
-        button {
-          background: #0070F3;
-          color: #fff;
-          padding: 10px 24px;
-          border-radius: 8px;
-          font-weight: 700;
-          font-size: 14px;
-          cursor: pointer;
-          transition: .25s;
-  
-          &:hover {
-            background: #005cc5;
-          }
-        }
-      }
-    }
-  }
+
   
   
   
