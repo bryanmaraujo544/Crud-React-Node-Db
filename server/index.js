@@ -85,9 +85,9 @@ app.get('/api/getUsers', (req, res) => {
 
 // Endpoint for update user information
 app.put('/api/updateUsers', (req, res) => {
-    const { username, email, password, image, pastEmail } = req.body
-    const sqlUpdate = "UPDATE users SET users_username = ?, users_email = ?, users_password = ?, users_imageUrl = ? WHERE users_email = ?"
-    db.query(sqlUpdate, [username, email, password, image, pastEmail], (err, res) => {
+    const { username, email, password, image, pastEmail, strToday } = req.body
+    const sqlUpdate = "UPDATE users SET users_username = ?, users_email = ?, users_password = ?, users_imageUrl = ?, alterationDate = ? WHERE users_email = ?"
+    db.query(sqlUpdate, [username, email, password, image, strToday, pastEmail], (err, res) => {
         if (err) console.log(err)
     })
 })
@@ -97,6 +97,12 @@ app.put('/api/updateEmailReview', (req, res) => {
     const { pastEmail, email } = req.body
     const sqlUpdate = "UPDATE movie_reviews SET user_email = ? WHERE user_email = ?"
     db.query(sqlUpdate, [email, pastEmail])
+})
+
+app.put('/api/createAlteration', (req, res) => {
+    const { alterationDate, email } = req.body
+    const sqlInsert = "UPDATE users SET alterationDate = ? WHERE users_email = ?"
+    db.query(sqlInsert, [alterationDate, email])
 })
 
 app.listen(3001, () => {

@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import { toast } from 'react-toastify'
 
 export const Card = ({
     review,
@@ -22,9 +23,13 @@ export const Card = ({
     // Function to delete review
     const handleDeleteReview = (movieName) => {
         Axios.delete(`http://localhost:3001/api/delete/${movieName}/${userLocal?.users_email}`)
+        toast.success('Review deleted!', {
+            position: 'top-center',
+            autoClose: 800
+        })
         setTimeout(() => {
             window.location.reload()
-        }, 100)
+        }, 1300)
     }
 
     return (

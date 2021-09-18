@@ -65,7 +65,6 @@ export const Home = () => {
             }
         } else {
             toast.error('Empty values. Write something!')
-
         }
     }
 
