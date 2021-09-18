@@ -60,7 +60,8 @@ export const Home = () => {
               movieNameRef.current.value = ''
               movieReviewRef.current.value = ''
               toast.success('Review done!', {
-                position: 'top-center'
+                position: 'top-center',
+                autoClose: 1000,
               })
             }
         } else {
