@@ -1,5 +1,6 @@
 import Axios from 'axios'
 import { toast } from 'react-toastify'
+import { motion } from 'framer-motion'
 
 export const Card = ({
     review,
@@ -33,7 +34,12 @@ export const Card = ({
     }
 
     return (
-        <div className="card" key={review.movie_name}>
+        <motion.div 
+            className="card" 
+            key={review.movie_name}
+            initial={{y: -100, opacity: 0}}
+            animate={{y: 0, opacity: 1}}
+        >
             <div className="text">
             <h3 className="card-title">
                 {review.movie_name}
@@ -46,6 +52,6 @@ export const Card = ({
                 <button type="button" className="card-button" onClick={() => handleReviewModal(review.movie_name, review.movie_review)}> Update </button>
                 <button type="button" className="card-button" onClick={() => handleDeleteReview(review.movie_name)}> Delete </button>
             </div>
-        </div>
+        </motion.div>
     )
 }
