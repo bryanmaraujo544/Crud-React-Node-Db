@@ -25,9 +25,9 @@ export const Profile = () => {
     const { isEmailUsed } = useEmailVerification(email)
 
     useEffect(() => {
-        const newEmail = JSON.parse(window.localStorage?.getItem('userTemp')).users_email
+        const newEmail = JSON.parse(window.localStorage?.getItem('userTemp'))?.users_email
+        
         const [user] = users.filter(user => user.users_email === newEmail)
-        console.log('user', user)
 
         // When user have already been catch and there isn't a record of user information, we do set to localStorage the new information.
         // I'm doing it because I need to set only one time and the user, in the first time the page render, will be undefined, because users array is been 
@@ -51,15 +51,18 @@ export const Profile = () => {
     const strToday = dateToday.toISOString()
 
     const alterationDate = new Date(userLocal?.alterationDate)
-    const strDate1 = alterationDate.toISOString()
 
+    console.log('alterationDate', alterationDate)
+  
     const msInDay = 1000 * 60 * 60  * 24
 
     // An variable to check the difference between the current day and the day of last modification
     const daysDifference = Math.floor((dateToday - alterationDate) / msInDay)
+    console.log(daysDifference)
   
     // The days left to can modify again
     const daysLeft = 5 - daysDifference
+    console.log(daysLeft)
 
     const [showError, setShowError] = useState(false)
 
@@ -68,11 +71,7 @@ export const Profile = () => {
         if (isEmailUsed){
             toast.error('Oops! This email is already been used :(')
         } else {
-            if (userLocal.alterationDate === null){
-                Axios.put('/api/createAlteration', {alterationDate: strToday, email: pastEmail})
-            }
-
-            if (daysDifference < 0){
+            if (daysDifference < 0 || userLocal?.alterationDate == null){
                 Axios.put('http://localhost:3001/api/updateUsers', { username, email, password, image, pastEmail, strToday })
                 
                 // Changing the email of the reviews wich was made by the pastEmail
@@ -108,8 +107,8 @@ export const Profile = () => {
                     {
                         showError &&
                         <div className="timer-div">
-                            <FiAlertCircle />
-                            <p>You altered the information { daysDifference } ago. come back { daysLeft } days later. </p>
+                            <FiAlertCircle className="alert-icon"/>
+                            <p>You altered the information { daysDifference } days ago. Come back { daysLeft } days later. </p>
                         </div>
                     }
                 </form>

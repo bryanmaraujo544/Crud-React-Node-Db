@@ -35,7 +35,7 @@ export const Register = () => {
                         username,
                         email,
                         password,
-                        imageUrl
+                        imageUrl,
                     })
                     const prom = new Promise(resolve => setTimeout(resolve, 1000))
                     
@@ -45,7 +45,6 @@ export const Register = () => {
                             pending: 'Creating user...',
                             success: 'User created!',
                             error: "User don't created",
-                            
                         }, 
                         {
                             autoClose: 1000
@@ -71,7 +70,6 @@ export const Register = () => {
             <div className="box">
                 <h1>Create Account</h1>
                 <span className="subtitle"> Already have an account? <a href="/"> Sign In </a> </span>
-
                 <form className="form" onSubmit={(e) => handleSignUp(e)}>
                     <input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
                     <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
