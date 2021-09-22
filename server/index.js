@@ -95,6 +95,7 @@ app.post('/api/register', (req, res) => {
 
     db.query(sqlSelect, (err, users) => {
         const isEmailUsed = users.some((item) => item.users_email === email);
+        console.log(isEmailUsed)
         if (isEmailUsed) {
             res.json({ message: "This Email Already Exists" })
         } else {

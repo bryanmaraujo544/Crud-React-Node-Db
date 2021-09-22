@@ -35,6 +35,22 @@ export const Register = () => {
                 })
                 const { data: { message } } = await req
                 console.log(message)
+                if (message === "User created"){
+                    toast.promise(
+                        req,
+                        {
+                            pending: 'Creating user...',
+                            success: 'User created!',
+                            error: "User don't created",
+                        }, 
+                        {
+                            autoClose: 1000
+                        }
+                    )
+                } else {
+                    toast.error("This email is already been used")
+                }
+                
                 
                 
                 // if (isEmailUsed){ 
