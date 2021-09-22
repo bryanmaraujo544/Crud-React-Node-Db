@@ -31,14 +31,13 @@ export const Register = () => {
                 if (isEmailUsed){ 
                     window.alert('This email is already been used')
                 } else {
-                    const req = Axios.post('http://localhost:3001/api/insert/users', {
+                    const req = Axios.post('http://localhost:3001/api/register', {
                         username,
                         email,
                         password,
                         imageUrl,
                     })
                     const prom = new Promise(resolve => setTimeout(resolve, 1000))
-                    
                     toast.promise(
                         prom,
                         {

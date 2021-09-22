@@ -83,6 +83,32 @@ app.get('/api/getUsers', (req, res) => {
     })
 })
 
+// =========== REGISTER ENDPOINT =========== //
+app.post('/api/register', (req, res) => {
+    const { username, email, password, imageUrl } = req.body
+    const sqlInsert = 'INSERT INTO users (users_username, users_email, users_password, users_imageurl) VALUES (?,?,?,?);'
+    db.query(sqlInsert, [username, email, password, imageUrl ], (err, res) => {
+        if (err) return res.status(400).json({ error: err })
+        if (res) res.status(200).json({ message: "User created" })
+    })
+
+})
+
+
+// =========== LOGIN ENDPOINT =========== //
+app.post('/api/login', (req, res) => {
+    const { email, password } = req.body
+    const sqlSelect = "SELECT * FROM db_crud.users; WHERE users_email = ?"
+    db.query(sqlSelect, (err, user) => {
+        if (err) return res.send(res)
+        if (user) {
+
+        } else {
+            res.status(400).json({ message: "User Not Found" })
+        }
+    })
+}) 
+
 // Endpoint for update user information
 app.put('/api/updateUsers', (req, res) => {
     const { username, email, password, image, pastEmail, strToday } = req.body

@@ -12,20 +12,24 @@ export const Login = () => {
     const history = useHistory()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [users, setUsers] = useState([])
-    const { loginUser } = useUsers(email, password)
-    console.log('loginUser', loginUser)
+    // const { loginUser } = useUsers(email, password)
+    // console.log('loginUser', loginUser)
 
     
     const handleSignIn = (e) => {
         e.preventDefault()
-        if (loginUser !== undefined){
-            window.localStorage.setItem('user', JSON.stringify(loginUser))
-            history.push('/home')
+        Axios.post('http://localhost:3001/login', { email, password }).then(res => {
+            
+        })
 
-        } else {
-            toast.error('Oops! wrong values :(');
-        }
+
+        // if (loginUser !== undefined){
+        //     window.localStorage.setItem('user', JSON.stringify(loginUser))
+        //     history.push('/home')
+
+        // } else {
+        //     toast.error('Oops! wrong values :(');
+        // }
     }
 
     return (
