@@ -13,12 +13,12 @@ export const Register = () => {
     const [imageUrl, setImageUrl] = useState('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
 
     const [users, setUsers] = useState([])
-    useEffect(() => {
-        Axios.get('http://localhost:3001/api/get/users')
-            .then(response => {
-                setUsers(response.data)
-            })
-    }, [])
+    // useEffect(() => {
+    //     Axios.get('http://localhost:3001/api/get/users')
+    //         .then(response => {
+    //             setUsers(response.data)
+    //         })
+    // }, [])
 
     const { isEmailUsed } = useEmailVerification(email)
 
@@ -27,34 +27,43 @@ export const Register = () => {
         if (username !== '' && email !== '' && password !== ''){
             if (email.includes('@')){
                 // Verification to check if the email the user wrote is being used for some other
-                console.log('isEmailUsed', isEmailUsed)
-                if (isEmailUsed){ 
-                    window.alert('This email is already been used')
-                } else {
-                    const req = Axios.post('http://localhost:3001/api/register', {
-                        username,
-                        email,
-                        password,
-                        imageUrl,
-                    })
-                    const prom = new Promise(resolve => setTimeout(resolve, 1000))
-                    toast.promise(
-                        prom,
-                        {
-                            pending: 'Creating user...',
-                            success: 'User created!',
-                            error: "User don't created",
-                        }, 
-                        {
-                            autoClose: 1000
-                        }
-                    ).then(() => {
-                        setTimeout(() => {
-                            history.push('/')
-                            window.location.reload()
-                        }, 1500)
-                    })
-                }             
+                const req = Axios.post('http://localhost:3001/api/register', {
+                    username,
+                    email,
+                    password,
+                    imageUrl,
+                })
+                const { data: { message } } = await req
+                console.log(message)
+                
+                
+                // if (isEmailUsed){ 
+                //     window.alert('This email is already been used')
+                // } else {
+                //     const req = Axios.post('http://localhost:3001/api/register', {
+                //         username,
+                //         email,
+                //         password,
+                //         imageUrl,
+                //     }).then((res) => console.log('register-res', res))
+                //     const prom = new Promise(resolve => setTimeout(resolve, 1000))
+                //     // toast.promise(
+                //     //     prom,
+                //     //     {
+                //     //         pending: 'Creating user...',
+                //     //         success: 'User created!',
+                //     //         error: "User don't created",
+                //     //     }, 
+                //     //     {
+                //     //         autoClose: 1000
+                //     //     }
+                //     // ).then(() => {
+                //     //     setTimeout(() => {
+                //     //         history.push('/')
+                //     //         window.location.reload()
+                //     //     }, 1500)
+                //     // })
+                // }             
             } else {
                 toast.warn('Enter a valid email!')
             }

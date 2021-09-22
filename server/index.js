@@ -83,15 +83,29 @@ app.get('/api/getUsers', (req, res) => {
     })
 })
 
+
+
+
+
+
 // =========== REGISTER ENDPOINT =========== //
 app.post('/api/register', (req, res) => {
-    const { username, email, password, imageUrl } = req.body
-    const sqlInsert = 'INSERT INTO users (users_username, users_email, users_password, users_imageurl) VALUES (?,?,?,?);'
-    db.query(sqlInsert, [username, email, password, imageUrl ], (err, res) => {
-        if (err) return res.status(400).json({ error: err })
-        if (res) res.status(200).json({ message: "User created" })
-    })
+    const { username, email, password, imageUrl } = req.body;
+    const sqlSelect = "SELECT * FROM users";
 
+    db.query(sqlSelect, (err, users) => {
+        const isEmailUsed = users.some((item) => item.users_email === email);
+        if (isEmailUsed) {
+            res.json({ message: "This Email Already Exists" })
+        } else {
+            const sqlInsert = 'INSERT INTO users (users_username, users_email, users_password, users_imageurl) VALUES (?,?,?,?);';
+            db.query(sqlInsert, [username, email, password, imageUrl ], (err, sqlRes) => {
+                if (err) return res.json({ error: err })
+                if (sqlRes) res.status(200).json({ message: "User created" })
+            })
+        }
+    })
+ 
 })
 
 
