@@ -4,6 +4,8 @@ const mysql = require('mysql')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const bcrypt = require('bcrypt')
+const { createToken } = require('./jwt')
+const cookieParser = require('cookie-parser')
 
 
 
@@ -16,8 +18,13 @@ const db = mysql.createPool({
 })
 
 app.use(bodyParser.urlencoded({extended: true}))
-app.use(cors())
+app.use(cors({
+    credentials: true,
+    origin: 'http://localhost:3000'
+}))
 app.use(express.json())
+app.use(cookieParser())
+
 
 console.log('SECRET', )
 
@@ -87,11 +94,6 @@ app.get('/api/getUsers', (req, res) => {
     })
 })
 
-
-
-
-
-
 // =========== REGISTER ENDPOINT =========== //
 app.post('/api/register', (req, res) => {
     const { username, email, password, imageUrl } = req.body;
@@ -116,7 +118,6 @@ app.post('/api/register', (req, res) => {
 
     })
 
- 
 })
 
 
@@ -124,30 +125,40 @@ app.post('/api/register', (req, res) => {
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body
 
-    const sqlSelect = "SELECT * FROM db_crud.users; WHERE users_email = ?"
-    db.query(sqlSelect, email, (err, user) => {
-        if (err) return res.send(err)
+    const sqlSelect = "SELECT * FROM db_crud.users WHERE users_email = ?"
+    db.query(sqlSelect, email, (err, [user]) => {
+        if (err) return res.json({ error: err })
         if (user) {
-            const dbHashPassord = user.users_password
+            const dbHashPassword = user.users_password
+
             // I'm grabin the password the user typed, and comparing to the password hashed wich is storaged in db.
-            const isEqual = bcrypt.compare(password, dbHashPassword)
-            if (isEqual){
-                const accessToken = createToken(user)
-
-                res.cookie("access-token", accessToken, {
-                    maxAge: 1000 * 60 * 60 * 24 * 30,
-                    httpOnly: true
-                })
-
-                res.json({ message: "Logged In" })
-            } else {
-                res.json({ message: "Wrong Username and Password Combination" })
-            }
+            bcrypt.compare(password, dbHashPassword).then((isEqual) => {
+                if (isEqual){
+                    const accessToken = createToken(user)
+                    res.cookie('access-token', accessToken);
+                    res.json({ message: "Logged In" });
+                } else {
+                    res.json({ message: "Wrong Username and Password Combination" })
+                }
+            }).catch(err => {
+                console.log(err)
+            })
         } else {
             res.json({ message: "User Not Found" })
         }
     })
 }) 
+
+
+// =========== AUTH ENDPOINT =========== //
+app.get('/api/auth', (req, res) => {
+    const accessToken = req.body.accessToken
+
+    
+})
+
+
+
 
 // Endpoint for update user information
 app.put('/api/updateUsers', (req, res) => {

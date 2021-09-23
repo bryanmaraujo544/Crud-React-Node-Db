@@ -6,6 +6,7 @@ import { toast, ToastContainer } from 'react-toastify'
 
 
 
+Axios.defaults.withCredentials = true;
 
 export const Login = () => {
     // const userLocal = JSON.parse(window.localStorage.getItem('user'))
@@ -15,13 +16,13 @@ export const Login = () => {
     // const { loginUser } = useUsers(email, password)
     // console.log('loginUser', loginUser)
 
-    
     const handleSignIn = (e) => {
         e.preventDefault()
-        Axios.post('http://localhost:3001/login', { email, password }).then(res => {
-            
+        Axios.post('http://localhost:3001/api/login', { email, password }).then(res => {
+            if (res.data.message === "Logged In") {
+                history.push('/home')
+            }
         })
-
 
         // if (loginUser !== undefined){
         //     window.localStorage.setItem('user', JSON.stringify(loginUser))
