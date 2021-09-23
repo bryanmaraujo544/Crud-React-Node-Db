@@ -3,6 +3,8 @@ const app = express()
 const mysql = require('mysql')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const bcrypt = require('bcrypt')
+
 
 
 // Here I am accessing my database
@@ -16,6 +18,8 @@ const db = mysql.createPool({
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors())
 app.use(express.json())
+
+console.log('SECRET', )
 
 // Endpoint to get the reviews based on the email
 app.get('/api/get/:userEmail', (req, res) => {
@@ -93,19 +97,25 @@ app.post('/api/register', (req, res) => {
     const { username, email, password, imageUrl } = req.body;
     const sqlSelect = "SELECT * FROM users";
 
-    db.query(sqlSelect, (err, users) => {
-        const isEmailUsed = users.some((item) => item.users_email === email);
-        console.log(isEmailUsed)
-        if (isEmailUsed) {
-            res.json({ message: "This Email Already Exists" })
-        } else {
-            const sqlInsert = 'INSERT INTO users (users_username, users_email, users_password, users_imageurl) VALUES (?,?,?,?);';
-            db.query(sqlInsert, [username, email, password, imageUrl ], (err, sqlRes) => {
-                if (err) return res.json({ error: err })
-                if (sqlRes) res.status(200).json({ message: "User created" })
-            })
-        }
+  
+    bcrypt.hash(password, 10).then((hashPassword) => {
+        db.query(sqlSelect, (err, users) => {
+            if (err) console.log(err)
+            const isEmailUsed = users.some((item) => item.users_email === email);
+            console.log(isEmailUsed)
+            if (isEmailUsed) {
+                res.json({ message: "This Email Already Exists" })
+            } else {
+                const sqlInsert = 'INSERT INTO users (users_username, users_email, users_password, users_imageurl) VALUES (?,?,?,?);';
+                db.query(sqlInsert, [username, email, hashPassword, imageUrl ], (sqlErr, sqlRes) => {
+                    if (sqlErr) console.log(sqlErr)
+                    if (sqlRes) res.status(200).json({ message: "User created" })
+                })
+            }
+        })
+
     })
+
  
 })
 
@@ -113,13 +123,28 @@ app.post('/api/register', (req, res) => {
 // =========== LOGIN ENDPOINT =========== //
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body
-    const sqlSelect = "SELECT * FROM db_crud.users; WHERE users_email = ?"
-    db.query(sqlSelect, (err, user) => {
-        if (err) return res.send(res)
-        if (user) {
 
+    const sqlSelect = "SELECT * FROM db_crud.users; WHERE users_email = ?"
+    db.query(sqlSelect, email, (err, user) => {
+        if (err) return res.send(err)
+        if (user) {
+            const dbHashPassord = user.users_password
+            // I'm grabin the password the user typed, and comparing to the password hashed wich is storaged in db.
+            const isEqual = bcrypt.compare(password, dbHashPassword)
+            if (isEqual){
+                const accessToken = createToken(user)
+
+                res.cookie("access-token", accessToken, {
+                    maxAge: 1000 * 60 * 60 * 24 * 30,
+                    httpOnly: true
+                })
+
+                res.json({ message: "Logged In" })
+            } else {
+                res.json({ message: "Wrong Username and Password Combination" })
+            }
         } else {
-            res.status(400).json({ message: "User Not Found" })
+            res.json({ message: "User Not Found" })
         }
     })
 }) 
