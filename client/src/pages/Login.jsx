@@ -3,12 +3,16 @@ import Axios from 'axios'
 import { useHistory } from "react-router"
 import { useUsers } from "../hooks/useUsers"
 import { toast, ToastContainer } from 'react-toastify'
+import { useAuth } from '../hooks/useAuth'
+
 
 
 
 Axios.defaults.withCredentials = true;
 
 export const Login = () => {
+    const value = useAuth()
+
     // const userLocal = JSON.parse(window.localStorage.getItem('user'))
     const history = useHistory()
     const [email, setEmail] = useState('')

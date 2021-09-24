@@ -6,16 +6,13 @@ import { useHistory } from 'react-router'
 import { Modal } from '../components/Modal/Modal'
 import { Card } from '../components/Card'
 import { toast } from 'react-toastify'
+import { useAuth } from '../hooks/useAuth'
 
 export const Home = () => {
+    const { isAuthenticated } = useAuth()
     const history = useHistory()
     // Getting the infos of the user wich was storaged in the login part
     const userLocal = JSON.parse(window.localStorage.getItem('user'))
-    useEffect(() => {
-      if (userLocal === null){
-        history.push('/')
-      }
-    }, [userLocal])
     
     useEffect(() => {
       // Getting the information of the database based on the email of the user

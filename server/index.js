@@ -6,6 +6,7 @@ const cors = require('cors')
 const bcrypt = require('bcrypt')
 const { createToken } = require('./jwt')
 const cookieParser = require('cookie-parser')
+const { verify } = require('jsonwebtoken')
 
 
 
@@ -151,10 +152,23 @@ app.post('/api/login', (req, res) => {
 
 
 // =========== AUTH ENDPOINT =========== //
-app.get('/api/auth', (req, res) => {
-    const accessToken = req.body.accessToken
-
+app.get('/api/auth/:accessToken', (req, res) => {
+    const accessToken = req.params.accessToken
+    if (!accessToken) return res.json({ error: 'User Not Authenticated', authenticated: false })
     
+    try {
+        const validToken = verify(accessToken, process.env.ACCESS_TOKEN_SECRET_KEY)
+        console.log('validToken', validToken)
+        if (validToken) {
+            res.json({ authenticated: true })
+        } else {
+            res.json({ message: 'invalid token', authenticated: false })
+        }
+    } catch (err) {
+        return res.json({ message: err, authenticated: false })
+        // return res.json({ error: err })
+    }
+
 })
 
 
