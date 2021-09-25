@@ -1,13 +1,14 @@
 import Axios from 'axios'
 import { toast } from 'react-toastify'
 import { motion } from 'framer-motion'
+import { useAuth } from '../hooks/useAuth'
 
 export const Card = ({
     review,
     setIsModalOn,
     setModalInfos
 }) => {
-    const userLocal = JSON.parse(window.localStorage.getItem('user'))
+    const { user } = useAuth()
 
     // Function to get the informations of the card clicked and show an modal
     const handleReviewModal = (movieName, movieReview) => {
@@ -23,7 +24,7 @@ export const Card = ({
 
     // Function to delete review
     const handleDeleteReview = (movieName) => {
-        Axios.delete(`http://localhost:3001/api/delete/${movieName}/${userLocal?.users_email}`)
+        Axios.delete(`http://localhost:3001/api/delete/${movieName}/${user.email}`)
         toast.success('Review deleted!', {
             position: 'top-center',
             autoClose: 800

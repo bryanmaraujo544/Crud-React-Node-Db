@@ -98,13 +98,13 @@ export const Home = () => {
             <button onClick={() => submitReview()}>Submit</button>
           </div>
             <div className="reviews">
-              {/* {reviewList.map(review => (                     
+              {reviewList.map(review => (                     
                 <Card 
                   review={review}
                   setIsModalOn={setIsModalOn}
                   setModalInfos={setModalInfos}
                 />
-              ))} */}
+              ))}
             </div>
         </div>
         <Modal 
