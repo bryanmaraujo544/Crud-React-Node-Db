@@ -6,7 +6,7 @@ const cors = require('cors')
 const bcrypt = require('bcrypt')
 const { createToken } = require('./jwt')
 const cookieParser = require('cookie-parser')
-const { verify } = require('jsonwebtoken')
+const { verify, decode } = require('jsonwebtoken')
 
 
 
@@ -32,7 +32,6 @@ console.log('SECRET', )
 // Endpoint to get the reviews based on the email
 app.get('/api/get/:userEmail', (req, res) => {
     const userEmail = req.params.userEmail
-    console.log('oi',req.params)
     const sqlSelect = 'SELECT * FROM movie_reviews WHERE user_email = ?;'
 
     db.query(sqlSelect, userEmail, (err, result) => {
@@ -59,7 +58,7 @@ app.delete('/api/delete/:movieName/:userEmail', (req, res) => {
     const name = req.params.movieName
     const userEmail = req.params.userEmail
     console.log('parama', req.params)
-    const sqlDelete = 'DELETE FROM movie_reviews WHERE movie_name = ? AND user_email = ? '
+    const sqlDelete = 'DELETE FROM movie_reviews WHERE movie_name = ? AND user_email = ?'
     db.query(sqlDelete, [name, userEmail])
 })
 
@@ -160,7 +159,7 @@ app.get('/api/auth/:accessToken', (req, res) => {
         const validToken = verify(accessToken, process.env.ACCESS_TOKEN_SECRET_KEY)
         console.log('validToken', validToken)
         if (validToken) {
-            res.json({ authenticated: true })
+            res.json({ message: 'authenticated', authenticated: true })
         } else {
             res.json({ message: 'invalid token', authenticated: false })
         }
@@ -168,8 +167,15 @@ app.get('/api/auth/:accessToken', (req, res) => {
         return res.json({ message: err, authenticated: false })
         // return res.json({ error: err })
     }
-
 })
+
+// =========== USER INFOS ENDPOINT =========== //
+app.get('/api/get-user/:accessToken', (req, res) => {
+    const token = req.params.accessToken
+    const user = decode(token) 
+    res.send(user)
+})
+
 
 
 

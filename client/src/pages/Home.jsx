@@ -7,21 +7,32 @@ import { Modal } from '../components/Modal/Modal'
 import { Card } from '../components/Card'
 import { toast } from 'react-toastify'
 import { useAuth } from '../hooks/useAuth'
+import { parseCookies } from 'nookies'
 
 export const Home = () => {
-    const { isAuthenticated } = useAuth()
+    const { isAuthenticated, user } = useAuth()
+    console.log(user.imageUrl)
+    
     const history = useHistory()
     // Getting the infos of the user wich was storaged in the login part
-    const userLocal = JSON.parse(window.localStorage.getItem('user'))
+    const cookies = parseCookies()
+    const accessToken = cookies['access-token'];
+  
+
+    useEffect(() => {
+      if (!isAuthenticated){
+        history.push('/')
+      }
+    }, [accessToken])
     
     useEffect(() => {
       // Getting the information of the database based on the email of the user
-        Axios.get(`http://localhost:3001/api/get/${userLocal?.users_email}`)
+        Axios.get(`http://localhost:3001/api/get/${user?.email}`)
         .then((response) => {
             setReviewList(response.data)
         })
 
-    }, [userLocal?.users_email])
+    }, [user?.email])
 
     const [movieName, setMovieName] = useState('')
     const [movieReview, setMovieReview] = useState('')
@@ -48,7 +59,7 @@ export const Home = () => {
               Axios.post('http://localhost:3001/api/insert', {
                   movieName: movieName,
                   movieReview: movieReview,
-                  userEmail: userLocal.users_email
+                  userEmail: user?.email
               })
               // Setting manually the state for I do not need reload the page
               setReviewList([...reviewList, {movie_name: movieName, movie_review: movieReview}])
@@ -69,8 +80,8 @@ export const Home = () => {
     return (
         <>
         <NavBar
-          imgUrl={userLocal?.users_imageurl}
-          username={userLocal?.users_username}
+          imgUrl={user?.imageUrl}
+          username={user?.username}
         />
         <div className="main">
           <h1> Crud Application </h1>
@@ -87,13 +98,13 @@ export const Home = () => {
             <button onClick={() => submitReview()}>Submit</button>
           </div>
             <div className="reviews">
-              {reviewList.map(review => (                     
+              {/* {reviewList.map(review => (                     
                 <Card 
                   review={review}
                   setIsModalOn={setIsModalOn}
                   setModalInfos={setModalInfos}
                 />
-              ))}
+              ))} */}
             </div>
         </div>
         <Modal 

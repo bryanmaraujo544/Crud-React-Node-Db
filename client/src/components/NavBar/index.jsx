@@ -3,10 +3,12 @@ import Icon from '../../assets/logout.png'
 import { useHistory } from 'react-router'
 import backIcon from '../../assets/back-arrow.png'
 
-export const NavBar = ({isProfile}) => {
-    const userLocal = JSON.parse(window.localStorage.getItem('user'))
+export const NavBar = ({
+    isProfile, 
+    imgUrl, 
+    username
+}) => {
     const history = useHistory()
-
  
     const handleLogout = () => {
         window.localStorage.removeItem('user')
@@ -18,11 +20,10 @@ export const NavBar = ({isProfile}) => {
                 <a href="/home">
                     <img src={backIcon} alt="back-icon" class="backIcon"/>
                 </a>
-            
             }
             <div className="profile" onClick={() => history.push('/profile')}>
-                <img src={userLocal?.users_imageurl} alt="ImageProfile" />
-                <p className="username">{userLocal?.users_username}</p>
+                <img src={imgUrl} alt="ImageProfile" />
+                <p className="username">{username}</p>
             </div>
             <div className="logout" onClick={() => handleLogout()}>
                 <img src={Icon} alt="" />

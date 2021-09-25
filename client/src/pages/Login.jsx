@@ -17,8 +17,7 @@ export const Login = () => {
     const history = useHistory()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    // const { loginUser } = useUsers(email, password)
-    // console.log('loginUser', loginUser)
+
 
     const handleSignIn = (e) => {
         e.preventDefault()
@@ -27,14 +26,6 @@ export const Login = () => {
                 history.push('/home')
             }
         })
-
-        // if (loginUser !== undefined){
-        //     window.localStorage.setItem('user', JSON.stringify(loginUser))
-        //     history.push('/home')
-
-        // } else {
-        //     toast.error('Oops! wrong values :(');
-        // }
     }
 
     return (
