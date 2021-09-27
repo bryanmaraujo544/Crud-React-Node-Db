@@ -24,6 +24,8 @@ export const Login = () => {
         Axios.post('http://localhost:3001/api/login', { email, password }).then(res => {
             if (res.data.message === "Logged In") {
                 history.push('/home')
+            } else {
+                toast.error('Oops! Something Wrong')
             }
         })
     }

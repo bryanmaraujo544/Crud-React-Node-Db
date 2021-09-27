@@ -98,7 +98,6 @@ app.get('/api/getUsers', (req, res) => {
 app.post('/api/register', (req, res) => {
     const { username, email, password, imageUrl } = req.body;
     const sqlSelect = "SELECT * FROM users";
-
   
     bcrypt.hash(password, 10).then((hashPassword) => {
         db.query(sqlSelect, (err, users) => {
@@ -110,14 +109,13 @@ app.post('/api/register', (req, res) => {
             } else {
                 const sqlInsert = 'INSERT INTO users (users_username, users_email, users_password, users_imageurl) VALUES (?,?,?,?);';
                 db.query(sqlInsert, [username, email, hashPassword, imageUrl ], (sqlErr, sqlRes) => {
-                    if (sqlErr) console.log(sqlErr)
+                    if (sqlErr) console.log('SQLERR', sqlErr)
                     if (sqlRes) res.status(200).json({ message: "User created" })
                 })
             }
         })
 
     })
-
 })
 
 
@@ -149,7 +147,6 @@ app.post('/api/login', (req, res) => {
     })
 }) 
 
-
 // =========== AUTH ENDPOINT =========== //
 app.get('/api/auth/:accessToken', (req, res) => {
     const accessToken = req.params.accessToken
@@ -176,16 +173,37 @@ app.get('/api/get-user/:accessToken', (req, res) => {
     res.send(user)
 })
 
+// =========== UPDATE USER INFOS ENDPOINT =========== //
+app.put('/api/update-user', (req, res) => {
 
-
-
+})
 
 // Endpoint for update user information
 app.put('/api/updateUsers', (req, res) => {
     const { username, email, password, image, pastEmail, strToday } = req.body
-    const sqlUpdate = "UPDATE users SET users_username = ?, users_email = ?, users_password = ?, users_imageUrl = ?, alterationDate = ? WHERE users_email = ?"
-    db.query(sqlUpdate, [username, email, password, image, strToday, pastEmail], (err, res) => {
-        if (err) console.log(err)
+    const sqlSelect = "SELECT * FROM users";
+
+    bcrypt.hash(password, 10).then((hashPassword) => {
+        db.query(sqlSelect, (err, users) => {
+            const isEmailUsed = users.some((item) => item.users_email === email);
+            console.log('IS EMAIL USED', isEmailUsed)
+            if (isEmailUsed) {
+                res.json({ message: 'Email is Already Been Used' })
+            } else {
+                const sqlUpdate = "UPDATE users SET users_username = ?, users_email = ?, users_password = ?, users_imageUrl = ?, alterationDate = ? WHERE users_email = ?"
+                db.query(sqlUpdate, [username, email, hashPassword, image, strToday, pastEmail], (err, updres) => {
+                    if (err) console.log('UPDATE QUERY', err)
+                    res.json({ message: "User updated" })
+    
+                    db.query('SELECT * FROM db_crud.users WHERE users_email = ?', email, (err, [user]) => {
+                        if (err) console.log('SELECT WHERE USERS_EMAIL', err)
+                        
+                        console.log('UUUUSEEER', user)
+                    })
+                })
+            }
+        })
+
     })
 })
 

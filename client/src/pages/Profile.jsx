@@ -1,47 +1,57 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
-import { useUsers } from '../hooks/useUsers'
 import { NavBar } from '../components/NavBar'
 import Axios from 'axios'
 import '../styles/Profile.scss'
-import { useEmailVerification } from '../hooks/useEmailVerification'
 import { toast } from 'react-toastify'
 import { FiAlertCircle } from "react-icons/fi";
+import { useAuth } from '../hooks/useAuth'
+import axios from 'axios'
+import { parseCookies, destroyCookie } from 'nookies'
 
 
 
 export const Profile = () => {
     const history = useHistory()
-    const userLocal = JSON.parse(window.localStorage.getItem('user'))
-
+    const { user } = useAuth()
+    console.log('userProfile', user)
+    const accessToken = parseCookies()['access-token']
+    console.log('accesstoken', accessToken)
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [image, setImage] = useState(userLocal?.users_imageurl)
+    const [image, setImage] = useState(user.imageUrl)
+    console.log('image', image)
+  
 
-    const pastEmail = userLocal?.users_email
+    const pastEmail = user.email
+    console.log('PAST EMAIL', pastEmail)
 
-    const { users } = useUsers()
-    const { isEmailUsed } = useEmailVerification(email)
+
 
     useEffect(() => {
-        const newEmail = JSON.parse(window.localStorage?.getItem('userTemp'))?.users_email
+        const newEmail = JSON.parse(window.localStorage?.getItem('userTemp'))?.email
+        setImage(user.imageUrl)
         
-        const [user] = users.filter(user => user.users_email === newEmail)
+        // axios.get(`http://localhost:3001/api/get-user/${accessToken}`).then(res => {
+            
+        // })
 
         // When user have already been catch and there isn't a record of user information, we do set to localStorage the new information.
         // I'm doing it because I need to set only one time and the user, in the first time the page render, will be undefined, because users array is been 
         // Uploaded by backend. And if for that this useEffect runs every time users array change.
-        if (user !== undefined && userLocal === null){
-            window.localStorage.setItem('user', JSON.stringify(user))
-            window.location.reload()
-        }
-    }, [users])
+
+
+        // if (user !== undefined && userLocal === null){
+        //     window.localStorage.setItem('user', JSON.stringify(user))
+        //     window.location.reload()
+        // }
+    }, [user])
 
     // Function for if the value of the image input is an empty string set to image state the value of the paste url of the user
     const handleImage = useCallback((e) => {
         if (e.target.value.length === 0){
-            setImage(userLocal?.users_imageurl)
+            setImage(user.imageUrl)
         } else {
             setImage(e.target.value)
         }
@@ -49,17 +59,12 @@ export const Profile = () => {
     
     const dateToday = new Date()
     const strToday = dateToday.toISOString()
-
-    const alterationDate = new Date(userLocal?.alterationDate)
-
+    const alterationDate = new Date(user.alterationDate)
     console.log('alterationDate', alterationDate)
-  
     const msInDay = 1000 * 60 * 60  * 24
-
     // An variable to check the difference between the current day and the day of last modification
     const daysDifference = Math.floor((dateToday - alterationDate) / msInDay)
     console.log(daysDifference)
-  
     // The days left to can modify again
     const daysLeft = 5 - daysDifference
     console.log(daysLeft)
@@ -68,33 +73,39 @@ export const Profile = () => {
 
     const handleUpdateInfos = useCallback((e) => {
         e.preventDefault()
-        if (isEmailUsed){
-            toast.error('Oops! This email is already been used :(')
-        } else {
-            if (daysDifference < 0 || userLocal?.alterationDate == null){
-                Axios.put('http://localhost:3001/api/updateUsers', { username, email, password, image, pastEmail, strToday })
-                
-                // Changing the email of the reviews wich was made by the pastEmail
-                Axios.put('http://localhost:3001/api/updateEmailReview', { pastEmail, email })
-                window.localStorage.removeItem('user')
         
-                // This information is the current email before update it. I'm setting is to localStorage to even after the page loader this information is been readable
-                // I made it because in the time I will set the new user informations to localStorage, I need the past email to catch the user in table of database and update it.
-                window.localStorage.setItem('userTemp', JSON.stringify({users_email: email}))
+        if (daysDifference < 0 || user.alterationDate == null){
+            console.log('OK')
+            Axios.put('http://localhost:3001/api/updateUsers', { username, email, password, image, pastEmail, strToday }).then(res => {
+                if (res.data.message === 'Email is Already Been Used') {
+                    toast.error(`Oops! ${res.data.message}`)
+                } else {
+                    toast.success('Yeeah! User updated')
                 
-                setTimeout(() => {
-                    window.location.reload()
-                }, 500)
-            } else {
-                setShowError(true)
-            }
+                    // Changing the email of the reviews wich was made by the pastEmail
+                    Axios.put('http://localhost:3001/api/updateEmailReview', { pastEmail, email })
+                    window.localStorage.removeItem('user')
+            
+                    // This information is the current email before update it. I'm setting is to localStorage to even after the page loader this information is been readable
+                    // I made it because in the time I will set the new user informations to localStorage, I need the past email to catch the user in table of database and update it.
+                    window.localStorage.setItem('userTemp', JSON.stringify({users_email: email}))
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 500)
+                }
+            })
+        } else {
+            setShowError(true)
         }
-    }, [username, email,password, image, isEmailUsed])
+        
+    }, [username, email, password, image])
 
     return (
         <div className="profile-container">
             <NavBar
                 isProfile
+                imgUrl={user.imageUrl}
+                username={user.username}
             />
             <div className="profile-grid">
                 <form className="change-form" onSubmit={(e) => handleUpdateInfos(e)}>
@@ -110,6 +121,7 @@ export const Profile = () => {
                             <FiAlertCircle className="alert-icon"/>
                             <p>You altered the information { daysDifference } days ago. Come back { daysLeft } days later. </p>
                         </div>
+                    
                     }
                 </form>
             </div>
