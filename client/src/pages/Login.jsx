@@ -1,23 +1,16 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Axios from 'axios'
 import { useHistory } from "react-router"
-import { useUsers } from "../hooks/useUsers"
-import { toast, ToastContainer } from 'react-toastify'
-import { useAuth } from '../hooks/useAuth'
-
-
+import { toast,  } from 'react-toastify'
 
 
 Axios.defaults.withCredentials = true;
 
 export const Login = () => {
-    const value = useAuth()
-
     // const userLocal = JSON.parse(window.localStorage.getItem('user'))
     const history = useHistory()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-
 
     const handleSignIn = (e) => {
         e.preventDefault()
@@ -32,7 +25,6 @@ export const Login = () => {
 
     return (
         <>
-
             <main>
                 <div className="box">
                     <h1> Welcome! Sign In </h1>

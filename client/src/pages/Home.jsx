@@ -17,26 +17,25 @@ export const Home = () => {
     // Getting the infos of the user wich was storaged in the login part
     const cookies = parseCookies()
     const accessToken = cookies['access-token'];
-  
+
+    const [movieName, setMovieName] = useState('')
+    const [movieReview, setMovieReview] = useState('')
+    const [reviewList, setReviewList] = useState([])
 
     useEffect(() => {
       if (!isAuthenticated){
         history.push('/')
       }
-    }, [accessToken])
+    }, [isAuthenticated])
     
     useEffect(() => {
       // Getting the information of the database based on the email of the user
-        Axios.get(`http://localhost:3001/api/get/${user?.email}`)
+        Axios.get(`http://localhost:3001/api/get-reviews/${user?.email}`)
         .then((response) => {
             setReviewList(response.data)
         })
 
     }, [user?.email])
-
-    const [movieName, setMovieName] = useState('')
-    const [movieReview, setMovieReview] = useState('')
-    const [reviewList, setReviewList] = useState([])
 
     // Creating the modal informations
     const [modalInfos, setModalInfos] = useState({movieName: '', movieReview: ''})
@@ -55,18 +54,20 @@ export const Home = () => {
             if (alreadyUsed){
               toast.error('This movie have already been reviewed. Thanks!')
             } else {
-              // Here I am making a post request, and sending two variables to our backend
-              Axios.post('http://localhost:3001/api/insert', {
+              // Here I am making a post request, and sending the informations of the review for our backend
+              Axios.post('http://localhost:3001/api/insert-review', {
                   movieName: movieName,
                   movieReview: movieReview,
                   userEmail: user?.email
               })
+
               // Setting manually the state for I do not need reload the page
               setReviewList([...reviewList, {movie_name: movieName, movie_review: movieReview}])
 
               // Cleaning inputs of the form
               movieNameRef.current.value = ''
               movieReviewRef.current.value = ''
+
               toast.success('Review done!', {
                 position: 'top-center',
                 autoClose: 1000,

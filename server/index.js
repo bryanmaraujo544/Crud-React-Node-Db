@@ -28,20 +28,17 @@ app.use(express.json())
 app.use(cookieParser())
 
 
-console.log('SECRET', )
-
 // Endpoint to get the reviews based on the email
-app.get('/api/get/:userEmail', (req, res) => {
+app.get('/api/get-reviews/:userEmail', (req, res) => {
     const userEmail = req.params.userEmail
     const sqlSelect = 'SELECT * FROM movie_reviews WHERE user_email = ?;'
 
     db.query(sqlSelect, userEmail, (err, result) => {
-        // console.log(err)
         res.send(result)
     })
 })
 
-app.post('/api/insert', (req, res) => {
+app.post('/api/insert-review', (req, res) => {
     const sqlInsert = 'INSERT INTO movie_reviews (movie_name, movie_review, user_email) VALUES (?,?,?);'
     // I use question marks to say I don't want to insert constant values, I want to set dynamic values in query time
 
@@ -63,7 +60,7 @@ app.delete('/api/delete/:movieName/:userEmail', (req, res) => {
     db.query(sqlDelete, [name, userEmail])
 })
 
-app.put('/api/update', (req, res) => {
+app.put('/api/update-review', (req, res) => {
     const name = req.body.movieName
     const review = req.body.movieReview
     const userEmail = req.body.userEmail
@@ -71,7 +68,7 @@ app.put('/api/update', (req, res) => {
     const sqlUpdate = 'UPDATE movie_reviews SET movie_review = ? WHERE movie_name = ? AND user_email = ?'
     db.query(sqlUpdate, [review, name, userEmail], (err, result) => {
         if (err) console.log('err',err)
-        if (result) console.log('res', result)
+        res.json({ message: 'review updated' })
     })
 })
 
@@ -82,16 +79,6 @@ app.post('/api/insert/users', (req, res) => {
     const sqlInsert = 'INSERT INTO users (users_username, users_email, users_password, users_imageurl) VALUES (?,?,?,?);'
     db.query(sqlInsert, [username, email, password, imageUrl], (err, result) => {
         if (err) console.log(err)
-    })
-})
-
-// Endpoint to get all the users of db
-app.get('/api/getUsers', (req, res) => {
-    const sqlSelect = 'SELECT * FROM db_crud.users;'
-    console.log('oiiiiiii')
-    db.query(sqlSelect, (err, result) => {
-        res.send(result)
-        console.log('erro' + err, 'result' + result)
     })
 })
 
@@ -174,31 +161,17 @@ app.get('/api/get-user/:accessToken', (req, res) => {
     res.send(user)
 })
 
-// =========== UPDATE USER INFOS ENDPOINT =========== //
-app.get('/api/update-user/:email', (req, res) => {
-    const email = req.params.email
-    const sqlSelect = 'SELECT * FROM users WHERE users_email = ?'
-    db.query(sqlSelect, email, (err, [user]) => {
-        if (err) console.log('OLHA O ERRO ', err)
-        const accessToken = createToken(user)
-        console.log('accessToken', accessToken)
-        res.cookie('access-token', accessToken)
-    })
-})
-
-app.get('/delete-cookie', (req, res) => {
-    
-})
 
 // Endpoint for update user information
 app.post('/api/updateUsers', (req, res) => {
     const { username, email, password, image, pastEmail, strToday } = req.body
-    const sqlSelect = "SELECT * FROM users";
 
+    // I am hashing the new password to update the user with that
     bcrypt.hash(password, 10).then((hashPassword) => {
-        db.query(sqlSelect, (err, users) => {
+        db.query("SELECT * FROM users", (err, users) => {
+            if (err) console.log(err)
+            // Here I am checking if the new email is already been used
             const isEmailUsed = users.some((item) => item.users_email === email);
-            console.log('IS EMAIL USED', isEmailUsed)
             if (isEmailUsed) {
                 res.json({ message: 'Email is Already Been Used' })
             } else {
@@ -206,9 +179,12 @@ app.post('/api/updateUsers', (req, res) => {
                 db.query(sqlUpdate, [username, email, hashPassword, image, strToday, pastEmail], (err, updres) => {
                     if (err) console.log('UPDATE QUERY', err)
                     
-    
+                    // After the user had updated, I grabbing this user (with new informations) based in the new email.
                     db.query('SELECT * FROM db_crud.users WHERE users_email = ?', email, (err, [user]) => {
                         if (err) console.log('SELECT WHERE USERS_EMAIL', err)
+                        
+                        // I'm creating a new jwt token with the information of the user in database.
+                        // And sending a json with a message and this token for in frontend I set a new cookie with new information
                         const accessToken = createToken(user)
                         res.json({ message: "User updated", accessToken: accessToken})
                         

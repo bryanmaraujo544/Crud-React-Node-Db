@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
@@ -8,13 +7,8 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from './hooks/useAuth'
 
-
 function App() {
-  const user = window.localStorage.getItem('user')
-
   const { isAuthenticated } = useAuth()
-  
-  console.log('value', isAuthenticated)
 
   const PrivateRoute = ({
     component: Component,

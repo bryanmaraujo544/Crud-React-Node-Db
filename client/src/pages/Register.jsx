@@ -1,9 +1,8 @@
 import '../styles/Register.scss'
 import { useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { useEmailVerification } from '../hooks/useEmailVerification'
 import Axios from 'axios'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 export const Register = () => {
     const history = useHistory()
@@ -11,16 +10,6 @@ export const Register = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [imageUrl, setImageUrl] = useState('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
-
-    const [users, setUsers] = useState([])
-    // useEffect(() => {
-    //     Axios.get('http://localhost:3001/api/get/users')
-    //         .then(response => {
-    //             setUsers(response.data)
-    //         })
-    // }, [])
-
-    const { isEmailUsed } = useEmailVerification(email)
 
     const handleSignUp = async (e) => {
         e.preventDefault()
@@ -33,9 +22,7 @@ export const Register = () => {
                 imageUrl,
             })
             const { data: { message } } = await req
-            console.log(message)
             const res = await req
-            console.log(res)
             if (message === "User created"){
                 toast.promise(
                     req,
