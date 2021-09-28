@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt')
 const { createToken } = require('./jwt')
 const cookieParser = require('cookie-parser')
 const { verify, decode } = require('jsonwebtoken')
+const { destroyCookie } = require('nookies')
 
 
 
@@ -174,12 +175,23 @@ app.get('/api/get-user/:accessToken', (req, res) => {
 })
 
 // =========== UPDATE USER INFOS ENDPOINT =========== //
-app.put('/api/update-user', (req, res) => {
+app.get('/api/update-user/:email', (req, res) => {
+    const email = req.params.email
+    const sqlSelect = 'SELECT * FROM users WHERE users_email = ?'
+    db.query(sqlSelect, email, (err, [user]) => {
+        if (err) console.log('OLHA O ERRO ', err)
+        const accessToken = createToken(user)
+        console.log('accessToken', accessToken)
+        res.cookie('access-token', accessToken)
+    })
+})
 
+app.get('/delete-cookie', (req, res) => {
+    
 })
 
 // Endpoint for update user information
-app.put('/api/updateUsers', (req, res) => {
+app.post('/api/updateUsers', (req, res) => {
     const { username, email, password, image, pastEmail, strToday } = req.body
     const sqlSelect = "SELECT * FROM users";
 
@@ -193,18 +205,19 @@ app.put('/api/updateUsers', (req, res) => {
                 const sqlUpdate = "UPDATE users SET users_username = ?, users_email = ?, users_password = ?, users_imageUrl = ?, alterationDate = ? WHERE users_email = ?"
                 db.query(sqlUpdate, [username, email, hashPassword, image, strToday, pastEmail], (err, updres) => {
                     if (err) console.log('UPDATE QUERY', err)
-                    res.json({ message: "User updated" })
+                    
     
                     db.query('SELECT * FROM db_crud.users WHERE users_email = ?', email, (err, [user]) => {
                         if (err) console.log('SELECT WHERE USERS_EMAIL', err)
+                        const accessToken = createToken(user)
+                        res.json({ message: "User updated", accessToken: accessToken})
                         
-                        console.log('UUUUSEEER', user)
                     })
                 })
             }
         })
 
-    })
+    }).catch(err => console.log('bcrypt err', err))
 })
 
 // Endpoint for update email of the review table in db

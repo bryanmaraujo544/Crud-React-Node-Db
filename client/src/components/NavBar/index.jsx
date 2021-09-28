@@ -2,6 +2,7 @@ import './styles.scss'
 import Icon from '../../assets/logout.png'
 import { useHistory } from 'react-router'
 import backIcon from '../../assets/back-arrow.png'
+import { destroyCookie } from 'nookies'
 
 export const NavBar = ({
     isProfile, 
@@ -10,8 +11,8 @@ export const NavBar = ({
 }) => {
     const history = useHistory()
  
-    const handleLogout = () => {
-        window.localStorage.removeItem('user')
+    const handleLogout = async () => {
+        await destroyCookie(null, 'access-token')
         history.push('/')
     }
     return (

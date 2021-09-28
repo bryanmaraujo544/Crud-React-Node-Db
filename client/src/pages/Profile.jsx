@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 import { FiAlertCircle } from "react-icons/fi";
 import { useAuth } from '../hooks/useAuth'
 import axios from 'axios'
-import { parseCookies, destroyCookie } from 'nookies'
+import { parseCookies, destroyCookie, setCookie } from 'nookies'
 
 
 
@@ -32,10 +32,6 @@ export const Profile = () => {
     useEffect(() => {
         const newEmail = JSON.parse(window.localStorage?.getItem('userTemp'))?.email
         setImage(user.imageUrl)
-        
-        // axios.get(`http://localhost:3001/api/get-user/${accessToken}`).then(res => {
-            
-        // })
 
         // When user have already been catch and there isn't a record of user information, we do set to localStorage the new information.
         // I'm doing it because I need to set only one time and the user, in the first time the page render, will be undefined, because users array is been 
@@ -76,22 +72,23 @@ export const Profile = () => {
         
         if (daysDifference < 0 || user.alterationDate == null){
             console.log('OK')
-            Axios.put('http://localhost:3001/api/updateUsers', { username, email, password, image, pastEmail, strToday }).then(res => {
+            Axios.post('http://localhost:3001/api/updateUsers', { username, email, password, image, pastEmail, strToday }).then(res => {
                 if (res.data.message === 'Email is Already Been Used') {
                     toast.error(`Oops! ${res.data.message}`)
                 } else {
-                    toast.success('Yeeah! User updated')
-                
+                    toast.success('Yeeah! User updated');
                     // Changing the email of the reviews wich was made by the pastEmail
                     Axios.put('http://localhost:3001/api/updateEmailReview', { pastEmail, email })
-                    window.localStorage.removeItem('user')
-            
-                    // This information is the current email before update it. I'm setting is to localStorage to even after the page loader this information is been readable
-                    // I made it because in the time I will set the new user informations to localStorage, I need the past email to catch the user in table of database and update it.
-                    window.localStorage.setItem('userTemp', JSON.stringify({users_email: email}))
-                    setTimeout(() => {
-                        window.location.reload()
-                    }, 500)
+                    
+                    // Setting a new cookie with the accessToken made in backend and received by back-end
+                    setCookie(null, 'access-token', res.data.accessToken, {
+                        maxAge: 30 * 24 * 60 * 60,
+                        path: '/',
+                    })
+
+                    window.location.reload();
+
+                    
                 }
             })
         } else {
