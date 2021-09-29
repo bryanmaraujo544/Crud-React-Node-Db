@@ -1,7 +1,9 @@
 import { useState } from "react"
 import Axios from 'axios'
 import { useHistory } from "react-router"
-import { toast,  } from 'react-toastify'
+import { toast } from 'react-toastify'
+import { AuthContainer } from '../styles/Commons'
+
 
 
 Axios.defaults.withCredentials = true;
@@ -24,18 +26,16 @@ export const Login = () => {
     }
 
     return (
-        <>
-            <main>
-                <div className="box">
-                    <h1> Welcome! Sign In </h1>
-                    <span className="subtitle"> Don't have an account? <a href="/register"> Sign up </a> </span>
-                    <form className="form" onSubmit={(e) => handleSignIn(e)}>
-                        <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
-                        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} required />
-                        <button type="submit"> Sign In </button>
-                    </form>
-                </div>
-            </main>
-        </>
+        <AuthContainer>
+            <div className="box">
+                <h1> Welcome! Sign In </h1>
+                <span className="subtitle"> Don't have an account? <a href="/register"> Sign up </a> </span>
+                <form className="form" onSubmit={(e) => handleSignIn(e)}>
+                    <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
+                    <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} required />
+                    <button type="submit"> Sign In </button>
+                </form>
+            </div>
+        </AuthContainer>
     )
 }

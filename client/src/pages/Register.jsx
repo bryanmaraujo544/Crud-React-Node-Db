@@ -1,4 +1,4 @@
-import '../styles/Register.scss'
+import { AuthContainer } from '../styles/Commons'
 import { useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import Axios from 'axios'
@@ -52,8 +52,7 @@ export const Register = () => {
     }
 
     return (
-        <>
-        <main>
+        <AuthContainer>
             <div className="box">
                 <h1>Create Account</h1>
                 <span className="subtitle"> Already have an account? <a href="/"> Sign In </a> </span>
@@ -65,7 +64,6 @@ export const Register = () => {
                     <button type="submit"> Sign Up </button>
                 </form>
             </div>
-        </main>
-        </>
+        </AuthContainer>
     )
 }

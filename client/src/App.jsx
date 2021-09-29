@@ -1,11 +1,12 @@
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
-import { Home } from "./pages/Home";
+import { Home } from "./pages/Home/index";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { Profile } from './pages/Profile'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from './hooks/useAuth'
+import { GlobalStyles } from './styles/GlobalStyles'
 
 function App() {
   const { isAuthenticated } = useAuth()
@@ -22,6 +23,7 @@ function App() {
   )
   return (
     <>
+        <GlobalStyles />
         <ToastContainer
             pauseOnHover
             draggable 

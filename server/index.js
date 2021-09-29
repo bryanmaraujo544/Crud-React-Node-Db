@@ -150,17 +150,15 @@ app.get('/api/auth/:accessToken', (req, res) => {
         }
     } catch (err) {
         return res.json({ message: err, authenticated: false })
-        // return res.json({ error: err })
     }
 })
 
 // =========== USER INFOS ENDPOINT =========== //
 app.get('/api/get-user/:accessToken', (req, res) => {
     const token = req.params.accessToken
-    const user = decode(token) 
+    const user = decode(token)
     res.send(user)
 })
-
 
 // Endpoint for update user information
 app.post('/api/updateUsers', (req, res) => {
@@ -201,12 +199,6 @@ app.put('/api/updateEmailReview', (req, res) => {
     const { pastEmail, email } = req.body
     const sqlUpdate = "UPDATE movie_reviews SET user_email = ? WHERE user_email = ?"
     db.query(sqlUpdate, [email, pastEmail])
-})
-
-app.put('/api/createAlteration', (req, res) => {
-    const { alterationDate, email } = req.body
-    const sqlInsert = "UPDATE users SET alterationDate = ? WHERE users_email = ?"
-    db.query(sqlInsert, [alterationDate, email])
 })
 
 app.listen(3001, () => {
