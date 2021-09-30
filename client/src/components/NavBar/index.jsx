@@ -1,4 +1,4 @@
-import './styles.scss'
+import { NavBarContainer } from './styles'
 import Icon from '../../assets/logout.png'
 import { useHistory } from 'react-router'
 import backIcon from '../../assets/back-arrow.png'
@@ -16,7 +16,7 @@ export const NavBar = ({
         history.push('/')
     }
     return (
-        <header>
+        <NavBarContainer>
             {isProfile && 
                 <a href="/home">
                     <img src={backIcon} alt="back-icon" class="backIcon"/>
@@ -30,7 +30,6 @@ export const NavBar = ({
                 <img src={Icon} alt="" />
                 <p>logout</p>
             </div>
-            
-        </header>
+        </NavBarContainer>
     )
 }

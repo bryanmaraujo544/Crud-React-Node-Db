@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
-import { Home } from "./pages/Home/index";
+import { Home } from "./pages/Home/Index";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
-import { Profile } from './pages/Profile'
+import { Profile } from './pages/Profile/Index';
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from './hooks/useAuth'
