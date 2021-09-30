@@ -7,6 +7,9 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from './hooks/useAuth'
 import { GlobalStyles } from './styles/GlobalStyles'
+import { ThemeProvider } from 'styled-components';
+import { theme } from './styles/theme'
+import { ThemeContextProvider } from './contexts/ThemeContext'
 
 function App() {
   const { isAuthenticated } = useAuth()
@@ -33,14 +36,18 @@ function App() {
             newestOnTop={false}
             icon={true}
         />
-        <BrowserRouter>
-            <Switch>
-              <Route path="/" exact component={ Login }/>
-              <Route path="/register" component={ Register } />
-              <PrivateRoute path="/home" component={ Home } />
-              <Route path="/profile" component={ Profile } />
-            </Switch>
-        </BrowserRouter>
+        <ThemeContextProvider>
+          <ThemeProvider theme={theme.light}>
+            <BrowserRouter>
+                <Switch>
+                  <Route path="/" exact component={ Login }/>
+                  <Route path="/register" component={ Register } />
+                  <PrivateRoute path="/home" component={ Home } />
+                  <Route path="/profile" component={ Profile } />
+                </Switch>
+            </BrowserRouter>
+          </ThemeProvider>
+        </ThemeContextProvider>
     </>
   );
 }
