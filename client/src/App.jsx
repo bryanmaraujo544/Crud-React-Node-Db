@@ -1,4 +1,5 @@
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { useContext } from 'react';
 import { Home } from "./pages/Home/Index";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
@@ -8,11 +9,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from './hooks/useAuth'
 import { GlobalStyles } from './styles/GlobalStyles'
 import { ThemeProvider } from 'styled-components';
-import { theme } from './styles/theme'
-import { ThemeContextProvider } from './contexts/ThemeContext'
+import { Theme } from './styles/theme';
+import { ThemeContext } from './contexts/ThemeContext';
 
 function App() {
   const { isAuthenticated } = useAuth()
+  const { theme } = useContext(ThemeContext)
 
   const PrivateRoute = ({
     component: Component,
@@ -36,8 +38,8 @@ function App() {
             newestOnTop={false}
             icon={true}
         />
-        <ThemeContextProvider>
-          <ThemeProvider theme={theme.light}>
+        
+          <ThemeProvider theme={theme === 'light' ? Theme.light : Theme.dark}>
             <BrowserRouter>
                 <Switch>
                   <Route path="/" exact component={ Login }/>
@@ -47,7 +49,7 @@ function App() {
                 </Switch>
             </BrowserRouter>
           </ThemeProvider>
-        </ThemeContextProvider>
+        
     </>
   );
 }
