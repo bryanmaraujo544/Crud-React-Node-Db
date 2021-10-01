@@ -21,7 +21,7 @@ function App() {
     ...rest
   }) => (
     <Route {...rest} render={(props) => (
-        isAuthenticated === true || isAuthenticated != false
+        isAuthenticated === true || isAuthenticated !== false
         ? <Component {...props} />
         : <Redirect to="/" />
     )} />

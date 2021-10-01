@@ -4,7 +4,7 @@ import { useHistory } from 'react-router'
 import backIcon from '../../assets/back-arrow.png'
 import { destroyCookie } from 'nookies'
 import { Switch } from '../Switch'
-import { useCallback, useContext, useState, useRef } from 'react'
+import { useCallback, useContext } from 'react'
 import { ThemeContext } from '../../contexts/ThemeContext'
 
 export const NavBar = ({
