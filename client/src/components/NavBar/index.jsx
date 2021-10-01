@@ -3,7 +3,7 @@ import Icon from '../../assets/logout.png'
 import { useHistory } from 'react-router'
 import backIcon from '../../assets/back-arrow.png'
 import { destroyCookie } from 'nookies'
-import Switch from 'react-switch'
+import { Switch } from '../Switch'
 import { useCallback, useContext, useState, useRef } from 'react'
 import { ThemeContext } from '../../contexts/ThemeContext'
 
@@ -13,14 +13,7 @@ export const NavBar = ({
     username
 }) => {
     const history = useHistory();
-
-    const { theme, setTheme } = useContext(ThemeContext);
-    console.log(theme)
-
-
-    const handleTheme = useCallback(() => {
-        theme === 'light' ? setTheme('dark') : setTheme('light');
-    }, [theme])
+    const { theme } = useContext(ThemeContext);
  
     const handleLogout = async () => {
         await destroyCookie(null, 'access-token')
@@ -43,8 +36,6 @@ export const NavBar = ({
                     <p>logout</p>
                 </div>
                 <Switch
-                   checked={theme === 'dark' ? true : false}
-                   onChange={handleTheme}
                 />
             </div>
         </NavBarContainer>
