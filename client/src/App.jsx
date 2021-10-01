@@ -13,7 +13,7 @@ import { Theme } from './styles/theme';
 import { ThemeContext } from './contexts/ThemeContext';
 
 function App() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated } = useAuth();
   const { theme } = useContext(ThemeContext)
 
   const PrivateRoute = ({
@@ -46,7 +46,7 @@ function App() {
                   <Route path="/" exact component={ Login }/>
                   <Route path="/register" component={ Register } />
                   <PrivateRoute path="/home" component={ Home } />
-                  <Route path="/profile" component={ Profile } />
+                  <PrivateRoute path="/profile" component={ Profile } />
                 </Switch>
             </BrowserRouter>
           </ThemeProvider>

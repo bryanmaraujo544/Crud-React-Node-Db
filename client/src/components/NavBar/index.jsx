@@ -23,9 +23,8 @@ export const NavBar = ({
     return (
         <NavBarContainer isDark={theme === 'dark' ? true : false}>
             {isProfile && 
-                <a href="/home">
-                    <img src={backIcon} alt="back-icon" class="backIcon"/>
-                </a>
+                <img src={backIcon} onClick={() => history.push('/home')} alt="back-icon" class="backIcon"/>
+                
             }
             <div className="profile" onClick={() => history.push('/profile')}>
                 <img src={imgUrl} alt="" />
