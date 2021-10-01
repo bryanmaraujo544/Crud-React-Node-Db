@@ -32,11 +32,12 @@ function App() {
         <ToastContainer
             pauseOnHover
             draggable 
-            position="top-right"
+            position="top-center"
             autoClose={5000}
             hideProgressBar={false}
             newestOnTop={false}
             icon={true}
+            darkMode={true}
         />
         
           <ThemeProvider theme={theme === 'light' ? Theme.light : Theme.dark}>

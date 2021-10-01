@@ -12,6 +12,7 @@ export const NavBar = ({
     imgUrl, 
     username
 }) => {
+
     const history = useHistory();
     const { theme } = useContext(ThemeContext);
  
@@ -27,11 +28,11 @@ export const NavBar = ({
                 </a>
             }
             <div className="profile" onClick={() => history.push('/profile')}>
-                <img src={imgUrl} alt="ImageProfile" />
+                <img src={imgUrl} alt="" />
                 <p className="username">{username}</p>
             </div>
             <div style={{display: 'flex', alignItems: 'center'}}>
-                <div style={{marginRight: '24px'}}className="logout" onClick={() => handleLogout()}>
+                <div style={{marginRight: '24px'}} className="logout" onClick={() => handleLogout()}>
                     <img src={Icon} alt="" />
                     <p>logout</p>
                 </div>
