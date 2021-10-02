@@ -4,7 +4,6 @@ import App from './App';
 import { AuthContextProvider } from './contexts/AuthContext'
 import { ThemeContextProvider } from './contexts/ThemeContext'
 
-
 ReactDOM.render(
   <>
     <ThemeContextProvider>

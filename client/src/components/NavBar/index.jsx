@@ -22,23 +22,23 @@ export const NavBar = ({
         window.location.reload();
     }
     return (
-        <NavBarContainer isDark={theme === 'dark' ? true : false}>
-            {isProfile && 
-                <img src={backIcon} onClick={() => history.push('/home')} alt="back-icon" class="backIcon"/>
-                
-            }
-            <div className="profile" onClick={() => history.push('/profile')}>
-                <img src={imgUrl} alt="" />
-                <p className="username">{username}</p>
-            </div>
-            <div style={{display: 'flex', alignItems: 'center'}}>
-                <div style={{marginRight: '24px'}} className="logout" onClick={() => handleLogout()}>
-                    <img src={Icon} alt="" />
-                    <p>logout</p>
-                </div>
-                <Switch
-                />
-            </div>
-        </NavBarContainer>
+          <NavBarContainer isDark={theme === 'dark' ? true : false}>
+               {isProfile && 
+                    <img src={backIcon} onClick={() => history.push('/home')} alt="back-icon" class="backIcon"/>
+                    
+               }
+               <div className="profile" onClick={() => history.push('/profile')}>
+                    <img src={imgUrl} alt="" />
+                    <p className="username">{username}</p>
+               </div>
+               <div style={{display: 'flex', alignItems: 'center'}}>
+                    <div style={{marginRight: '24px'}} className="logout" onClick={() => handleLogout()}>
+                         <img src={Icon} alt="" />
+                         <p>logout</p>
+                    </div>
+                    <Switch
+                    />
+               </div>
+          </NavBarContainer>
     )
 }

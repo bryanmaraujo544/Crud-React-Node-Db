@@ -13,47 +13,45 @@ import { Theme } from './styles/theme';
 import { ThemeContext } from './contexts/ThemeContext';
 
 function App() {
-  const { isAuthenticated } = useAuth();
-  const { theme } = useContext(ThemeContext);
-  console.log('IS AUTHENTICATED IN APP', isAuthenticated);
+     const { isAuthenticated } = useAuth();
+     const { theme } = useContext(ThemeContext);
 
-  const PrivateRoute = ({
-    component: Component,
-    ...rest
-  }) => (
-    <Route {...rest} render={(props) => (
-        isAuthenticated == false
-        ? <Redirect to="/" />
-        : <Component {...props} />
-    )} />
-  )
-  return (
-    <>
-        <GlobalStyles />
-        <ToastContainer
-            pauseOnHover
-            draggable 
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            icon={true}
-            darkMode={true}
-        />
-        
-          <ThemeProvider theme={theme === 'light' ? Theme.light : Theme.dark}>
-            <BrowserRouter>
-                <Switch>
-                  <Route path="/" exact component={ Login }/>
-                  <Route path="/register" component={ Register } />
-                  <PrivateRoute path="/home" component={ Home } />
-                  <PrivateRoute path="/profile" component={ Profile } />
-                </Switch>
-            </BrowserRouter>
-          </ThemeProvider>
-        
-    </>
-  );
+     const PrivateRoute = ({
+          component: Component,
+          ...rest
+     }) => (
+          <Route {...rest} render={(props) => (
+               isAuthenticated == false
+               ? <Redirect to="/" />
+               : <Component {...props} />
+          )} />
+     )
+     return (
+     <>
+          <GlobalStyles />
+          <ToastContainer
+               pauseOnHover
+               draggable 
+               position="top-center"
+               autoClose={5000}
+               hideProgressBar={false}
+               newestOnTop={false}
+               icon={true}
+          />
+          
+               <ThemeProvider theme={theme === 'light' ? Theme.light : Theme.dark}>
+               <BrowserRouter>
+                    <Switch>
+                    <Route path="/" exact component={ Login }/>
+                    <Route path="/register" component={ Register } />
+                    <PrivateRoute path="/home" component={ Home } />
+                    <PrivateRoute path="/profile" component={ Profile } />
+                    </Switch>
+               </BrowserRouter>
+               </ThemeProvider>
+          
+     </>
+     );
 }
 
 export default App;
