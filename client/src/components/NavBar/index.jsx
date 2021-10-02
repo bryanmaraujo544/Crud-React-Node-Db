@@ -17,8 +17,9 @@ export const NavBar = ({
     const { theme } = useContext(ThemeContext);
  
     const handleLogout = async () => {
-        await destroyCookie(null, 'access-token')
+        await destroyCookie(null, 'access-token');
         history.push('/')
+        window.location.reload();
     }
     return (
         <NavBarContainer isDark={theme === 'dark' ? true : false}>

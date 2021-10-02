@@ -14,16 +14,17 @@ import { ThemeContext } from './contexts/ThemeContext';
 
 function App() {
   const { isAuthenticated } = useAuth();
-  const { theme } = useContext(ThemeContext)
+  const { theme } = useContext(ThemeContext);
+  console.log('IS AUTHENTICATED IN APP', isAuthenticated);
 
   const PrivateRoute = ({
     component: Component,
     ...rest
   }) => (
     <Route {...rest} render={(props) => (
-        isAuthenticated === true || isAuthenticated !== false
-        ? <Component {...props} />
-        : <Redirect to="/" />
+        isAuthenticated == false
+        ? <Redirect to="/" />
+        : <Component {...props} />
     )} />
   )
   return (
