@@ -32,5 +32,7 @@ I've used React to build the application interface; NodeJs/ExpressJs to build th
 - Cors
 - Mysql
 - Express
+- Framer Motion
+- React Icons
 - Nodemon
 
